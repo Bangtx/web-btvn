@@ -124,6 +124,7 @@ def is_multi_choice(name):
         if name[name.index('.png') - 1: name.index('.png')] != '_':
             print(name[name.index('.png') - 1: name.index('.png')] )
             return True
+
     return False
 
 
