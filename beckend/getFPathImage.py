@@ -81,20 +81,17 @@ def insert_one_question(**kwargs):
 
 
 def is_file(fileName):
-    if len(fileName) == 11:
-        if fileName.find('.png') != -1:
-            return True
-        else:
-            return False
+    if fileName.find('.png') != -1:
+        return True
     else:
         return False
 
 
 def is_question(file_name):
-    if len(file_name) == 11:
-        return True
-    else:
+    if file_name.find('M.png') != -1:
         return False
+    else:
+        return True
 
 
 def clear_duplicate(list_data):
@@ -110,6 +107,7 @@ def clear_duplicate(list_data):
 def get_list_doc(list_data):
     result = list()
     for data in list_data:
+        print(is_file(data), is_question(data))
         if not is_file(data):
             result.append(data)
     return result
@@ -184,44 +182,41 @@ def get_data():
                         type = 'multi choice'
                     if is_long_response(doc_and_file):
                         type = 'long response'
-                    # insert_one_question(
-                    #     subject=subjec[0],
-                    #     topic=topic[0],
-                    #     document=doc,
-                    #     question=doc_and_file,
-                    #     type=type,
-                    #     link=f'question/{subjec[1]}/{topic[1]}/{doc}/{doc_and_file}'
-                    # )
-                    print(f'question/{subjec[1]}/{topic[1]}/{doc}/{doc_and_file}')
-                    print(not is_file(doc_and_file))
+                    insert_one_question(
+                        subject=subjec[0],
+                        topic=topic[0],
+                        document=doc,
+                        question=doc_and_file,
+                        type=type,
+                        link=f'question/{subjec[1]}/{topic[1]}/{doc_and_file}'
+                    )
+                    # print(f'question/{subjec[1]}/{topic[1]}/{doc}/{doc_and_file}')
+                    # print(is_file(doc_and_file))
                 if not is_file(doc_and_file):
+                    print('????', list_doc)
                     for i in list_doc:
                         if doc_and_file == i[1]:
                             doc_and_file = i[1]
-                        # print(f'question/{subjec[1]}/{topic[1]}/{doc_and_file}')
-                        list_question = os.listdir(f'question/{subjec[1]}/{topic[1]}')
+                        print(f'question/{subjec[1]}/{topic[1]}/{doc_and_file}')
+                        list_question = os.listdir(f'question/{subjec[1]}/{topic[1]}/{doc_and_file}')
                         for question in list_question:
                             if is_file(question) and is_question(question):
-                                print(f'question/{subjec[1]}/{topic[1]}/{doc_and_file}')
+                                print(f'question/{subjec[1]}/{topic[1]}/{doc_and_file}/{question}')
                                 if is_multi_choice(question):
                                     type = 'multi choice'
                                 if is_long_response(question):
                                     type = 'long response'
-                                # insert_one_question(
-                                #     subject=subjec[0],
-                                #     topic=topic[0],
-                                #     document=doc_and_file,
-                                #     question=doc_and_file,
-                                #     type=type,
-                                #     link=f'question/{subjec[1]}/{topic[1]}/{doc}/{doc_and_file}'
-                                # )
+                                insert_one_question(
+                                    subject=subjec[0],
+                                    topic=topic[0],
+                                    document=doc_and_file,
+                                    question=question,
+                                    type=type,
+                                    link=f'question/{subjec[1]}/{topic[1]}/{doc_and_file}/{question}'
+                                )
 
 
-create_database(list_sql)
-# begin()
-get_data()
-# begin()
-# print(select_all('topic'))
-# print(select_one('topic', 3))
-# data = insert_one('subject', 'hoa hoc')
-# print(data)
+if __name__ == '__main__':
+    create_database(list_sql)
+    begin()
+    get_data()
